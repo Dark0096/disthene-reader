@@ -12,7 +12,6 @@ import net.iponweb.disthene.reader.service.index.IndexService;
 import net.iponweb.disthene.reader.utils.Jsons;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -57,7 +56,7 @@ public class MetricsFindHandler implements DistheneReaderHandler {
     private void setQuery(QueryStringDecoder queryStringDecoder, MetricsFindParameters metricsFindParameters) {
         List<String> parameters = queryStringDecoder.parameters().get("query");
 
-        if (Objects.nonNull(parameters)) {
+        if (parameters != null) {
             metricsFindParameters.setQuery(parameters.get(0));
         }
     }
@@ -65,7 +64,7 @@ public class MetricsFindHandler implements DistheneReaderHandler {
     private void setUntil(QueryStringDecoder queryStringDecoder, MetricsFindParameters metricsFindParameters) {
         List<String> parameters = queryStringDecoder.parameters().get("until");
 
-        if (Objects.nonNull(parameters)) {
+        if (parameters != null) {
             metricsFindParameters.setUntil(parameters.get(0));
         }
     }
@@ -73,7 +72,7 @@ public class MetricsFindHandler implements DistheneReaderHandler {
     private void setFrom(QueryStringDecoder queryStringDecoder, MetricsFindParameters metricsFindParameters) {
         List<String> parameters = queryStringDecoder.parameters().get("from");
 
-        if (Objects.nonNull(parameters)) {
+        if (parameters != null) {
             metricsFindParameters.setFrom(parameters.get(0));
         }
     }

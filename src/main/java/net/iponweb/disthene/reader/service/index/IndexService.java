@@ -14,6 +14,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHitField;
@@ -87,8 +88,8 @@ public class IndexService {
         return result;
     }
 
-    public Set<HierarchyMetricPath> getPathsAsHierarchyMetricPath(String tenant, String wildcard) throws TooMuchDataExpectedException {
-        String regEx = WildcardUtil.getPathsRegExFromWildcard(wildcard);
+    public Set<HierarchyMetricPath> getPathsAsHierarchyMetricPath(String tenant, String query) throws TooMuchDataExpectedException {
+        String regEx = WildcardUtil.getPathsRegExFromWildcard(query);
 
         SearchResponse response = client.prepareSearch(indexConfiguration.getIndex())
                 .setScroll(new TimeValue(indexConfiguration.getTimeout()))
@@ -98,7 +99,13 @@ public class IndexService {
                         FilterBuilders.termFilter("tenant", tenant)))
                 .execute().actionGet();
 
+        FilteredQueryBuilder filteredQueryBuilder = QueryBuilders.filteredQuery(
+                QueryBuilders.regexpQuery("path", regEx),
+                FilterBuilders.termFilter("tenant", tenant));
+
         // if total hits exceeds maximum - abort right away returning empty array
+        logger.debug("query : " + filteredQueryBuilder.buildAsBytes().toString());
+        logger.debug("response.getHits().totalHits() : " + response.getHits().totalHits());
         if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
             logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
             throw new TooMuchDataExpectedException("Total number of paths exceeds the limit: " + response.getHits().totalHits() + " (the limit is " + indexConfiguration.getMaxPaths() + ")");
