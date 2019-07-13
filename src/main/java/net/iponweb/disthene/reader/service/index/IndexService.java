@@ -104,7 +104,7 @@ public class IndexService {
                 FilterBuilders.termFilter("tenant", tenant));
 
         // if total hits exceeds maximum - abort right away returning empty array
-        logger.debug("query : " + filteredQueryBuilder.buildAsBytes().toString());
+        logger.debug("query : " + new String(filteredQueryBuilder.buildAsBytes().toBytes()));
         logger.debug("response.getHits().totalHits() : " + response.getHits().totalHits());
         if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
             logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
