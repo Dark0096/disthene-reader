@@ -7,10 +7,13 @@ import net.iponweb.disthene.reader.exceptions.LogarithmicScaleNotAllowed;
 import net.iponweb.disthene.reader.exceptions.ParameterParsingException;
 import net.iponweb.disthene.reader.exceptions.TooMuchDataExpectedException;
 import net.iponweb.disthene.reader.handler.parameters.MetricsFindParameters;
+import net.iponweb.disthene.reader.handler.response.HierarchyMetricPath;
 import net.iponweb.disthene.reader.service.index.IndexService;
+import net.iponweb.disthene.reader.utils.Jsons;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public class MetricsFindHandler implements DistheneReaderHandler {
@@ -26,12 +29,12 @@ public class MetricsFindHandler implements DistheneReaderHandler {
     public FullHttpResponse handle(HttpRequest request) throws ParameterParsingException, ExecutionException, InterruptedException, EvaluationException, LogarithmicScaleNotAllowed, TooMuchDataExpectedException {
         MetricsFindParameters parameters = parse(request);
 
-        String pathsAsJsonArray = indexService.getPathsAsJsonArray(DEFAULT_TENANT, parameters.getQuery());
+        Set<HierarchyMetricPath> hierarchyMetricPath = indexService.getPathsAsHierarchyMetricPath(DEFAULT_TENANT, parameters.getQuery());
 
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HttpVersion.HTTP_1_1,
                 HttpResponseStatus.OK,
-                Unpooled.wrappedBuffer(pathsAsJsonArray.getBytes()));
+                Unpooled.wrappedBuffer(Jsons.stringify(hierarchyMetricPath).getBytes()));
         response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "application/json");
         response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, response.content().readableBytes());
         return response;

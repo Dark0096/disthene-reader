@@ -3,6 +3,7 @@ package net.iponweb.disthene.reader.service.index;
 import com.google.common.base.Joiner;
 import net.iponweb.disthene.reader.config.IndexConfiguration;
 import net.iponweb.disthene.reader.exceptions.TooMuchDataExpectedException;
+import net.iponweb.disthene.reader.handler.response.HierarchyMetricPath;
 import net.iponweb.disthene.reader.utils.WildcardUtil;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.count.CountResponse;
@@ -15,10 +16,9 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Andrei Ivanov
@@ -85,6 +85,43 @@ public class IndexService {
         }
 
         return result;
+    }
+
+    public Set<HierarchyMetricPath> getPathsAsHierarchyMetricPath(String tenant, String wildcard) throws TooMuchDataExpectedException {
+        String regEx = WildcardUtil.getPathsRegExFromWildcard(wildcard);
+
+        SearchResponse response = client.prepareSearch(indexConfiguration.getIndex())
+                .setScroll(new TimeValue(indexConfiguration.getTimeout()))
+                .setSize(indexConfiguration.getScroll())
+                .setQuery(QueryBuilders.filteredQuery(
+                        QueryBuilders.regexpQuery("path", regEx),
+                        FilterBuilders.termFilter("tenant", tenant)))
+                .execute().actionGet();
+
+        // if total hits exceeds maximum - abort right away returning empty array
+        if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
+            logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
+            throw new TooMuchDataExpectedException("Total number of paths exceeds the limit: " + response.getHits().totalHits() + " (the limit is " + indexConfiguration.getMaxPaths() + ")");
+        }
+
+        Set<HierarchyMetricPath> hierarchyMetricPaths = new HashSet<>();
+        while (response.getHits().getHits().length > 0) {
+            for (SearchHit hit : response.getHits()) {
+                hierarchyMetricPaths.add(mapToHierarchyMetricPath(hit));
+            }
+            response = client.prepareSearchScroll(response.getScrollId())
+                    .setScroll(new TimeValue(indexConfiguration.getTimeout()))
+                    .execute().actionGet();
+        }
+
+        return hierarchyMetricPaths;
+    }
+
+    private HierarchyMetricPath mapToHierarchyMetricPath(SearchHit hit) {
+        Integer depth = hit.field("depth").getValue();
+        Boolean leaf = hit.field("leaf").getValue();
+
+        return HierarchyMetricPath.of(hit.getSourceAsString(), depth, leaf);
     }
 
     public String getPathsAsJsonArray(String tenant, String wildcard) throws TooMuchDataExpectedException {
