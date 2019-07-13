@@ -32,7 +32,7 @@ public class DistheneReader {
 
     private static final String METRICS_PATH = "^/metrics\\/?$";
     private static final String PATHS_PATH = "^/paths\\/?$";
-    private static final String METRICS_FIND_PATH = "^/paths/find\\/?$";
+    private static final String METRICS_FIND_PATH = "^/metrics/find\\/?$";
     private static final String PING_PATH = "^/ping\\/?$";
     private static final String RENDER_PATH = "^/render\\/?$";
     private static final String SEARCH_PATH = "^/search\\/?$";
