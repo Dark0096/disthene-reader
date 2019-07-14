@@ -14,10 +14,8 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHitField;
 
 import java.util.*;
 
@@ -94,17 +92,11 @@ public class IndexService {
         SearchResponse response = client.prepareSearch(indexConfiguration.getIndex())
                 .setScroll(new TimeValue(indexConfiguration.getTimeout()))
                 .setSize(indexConfiguration.getScroll())
-                .setQuery(QueryBuilders.filteredQuery(
-                        QueryBuilders.regexpQuery("path", regEx),
-                        FilterBuilders.termFilter("tenant", tenant)))
+                .setQuery(QueryBuilders.regexpQuery("path", regEx))
                 .execute().actionGet();
 
-        FilteredQueryBuilder filteredQueryBuilder = QueryBuilders.filteredQuery(
-                QueryBuilders.regexpQuery("path", regEx),
-                FilterBuilders.termFilter("tenant", tenant));
-
         // if total hits exceeds maximum - abort right away returning empty array
-        logger.debug("query : " + new String(filteredQueryBuilder.buildAsBytes().toBytes()));
+        logger.debug("query : " + new String(QueryBuilders.regexpQuery("path", regEx).buildAsBytes().toBytes()));
         logger.debug("response.getHits().totalHits() : " + response.getHits().totalHits());
         if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
             logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
