@@ -9,6 +9,7 @@ All in all, this project is about read and rendering performance exactly like **
 ## What's in
 The following APIs are supported:
 * /paths API for backward compatibility with **graphite-api** and **cyanite**
+* /metrics/find for Grafana
 * /metrics
 * /render mostly as per Graphite specification version 0.10.0
 
