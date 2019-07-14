@@ -9,6 +9,8 @@ public class HierarchyMetricPath {
     private int leaf;
     private String text;
 
+    private HierarchyMetricPath() {}
+
     public static HierarchyMetricPath of(String path, Integer depth, Boolean leaf) {
         Preconditions.checkNotNull(path, "path must be set!");
         Preconditions.checkNotNull(depth, "depth must be set!");
@@ -19,12 +21,9 @@ public class HierarchyMetricPath {
         hierarchyMetricPath.setExpandable(leaf ? 0 : 1);
         hierarchyMetricPath.setLeaf(leaf ? 0 : 1);
         hierarchyMetricPath.setId(path);
-        hierarchyMetricPath.setText(path);
+        hierarchyMetricPath.setText(path.substring(path.lastIndexOf('.') + 1));
 
         return hierarchyMetricPath;
-    }
-    private HierarchyMetricPath() {
-
     }
 
     public int getAllowChildren() {
@@ -65,5 +64,16 @@ public class HierarchyMetricPath {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "HierarchyMetricPath{" +
+                "allowChildren=" + allowChildren +
+                ", expandable=" + expandable +
+                ", id='" + id + '\'' +
+                ", leaf=" + leaf +
+                ", text='" + text + '\'' +
+                '}';
     }
 }
