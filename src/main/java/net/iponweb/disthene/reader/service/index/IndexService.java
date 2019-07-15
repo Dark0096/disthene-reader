@@ -61,40 +61,16 @@ public class IndexService {
     if (regExs.size() > 0) {
       String regEx = Joiner.on("|").skipNulls().join(regExs);
 
-      SearchResponse response =
-          client
-              .prepareSearch(indexConfiguration.getIndex())
-              .setScroll(new TimeValue(indexConfiguration.getTimeout()))
-              .setSize(indexConfiguration.getScroll())
-              .setQuery(
-                  QueryBuilders.filteredQuery(
-                      QueryBuilders.regexpQuery("path", regEx),
-                      FilterBuilders.termFilter("tenant", tenant)))
-              .addField("path")
-              .execute()
-              .actionGet();
-
-      // if total hits exceeds maximum - abort right away returning empty array
-      if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
-        logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
-        throw new TooMuchDataExpectedException(
-            "Total number of paths exceeds the limit: "
-                + response.getHits().totalHits()
-                + " (the limit is "
-                + indexConfiguration.getMaxPaths()
-                + ")");
-      }
+      // Why secondary searchPaths to elasticsearch?
+      // Reason : https://stackoverflow.com/questions/18239537/scroll-searchresponse-not-iterable-when-there-are-less-results-than-the-scrollsi
+      SearchResponse response = searchPaths(regEx);
 
       while (response.getHits().getHits().length > 0) {
         for (SearchHit hit : response.getHits()) {
-          result.add((String) hit.field("path").getValue());
+          result.add((String) hit.sourceAsMap().get("path"));
         }
-        response =
-            client
-                .prepareSearchScroll(response.getScrollId())
-                .setScroll(new TimeValue(indexConfiguration.getTimeout()))
-                .execute()
-                .actionGet();
+
+        response = searchScroll(response);
       }
     }
 
@@ -107,29 +83,9 @@ public class IndexService {
     try {
       String regEx = WildcardUtil.getPathsRegExFromWildcard(query);
 
-      // Why secondary search to elasticsearch?
+      // Why secondary searchPaths to elasticsearch?
       // Reason : https://stackoverflow.com/questions/18239537/scroll-searchresponse-not-iterable-when-there-are-less-results-than-the-scrollsi
-      SearchResponse response = client.prepareSearch(indexConfiguration.getIndex())
-              .setTypes("path")
-              .setSearchType(SearchType.SCAN)
-              .setScroll(TimeValue.timeValueMinutes(1))
-              .setSize(1000)
-              .setQuery(QueryBuilders.regexpQuery("path", regEx))
-              .execute()
-              .actionGet();
-
-      response = searchScroll(response);
-
-      // if total hits exceeds maximum - abort right away returning empty array
-      if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
-        logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
-        throw new TooMuchDataExpectedException(
-            "Total number of paths exceeds the limit: "
-                + response.getHits().totalHits()
-                + " (the limit is "
-                + indexConfiguration.getMaxPaths()
-                + ")");
-      }
+      SearchResponse response = searchPaths(regEx);
 
       hierarchyMetricPaths = new HashSet<>();
       while (0 < response.getHits().getHits().length) {
@@ -143,6 +99,31 @@ public class IndexService {
     }
 
     return hierarchyMetricPaths;
+  }
+
+  private SearchResponse searchPaths(String regEx) throws TooMuchDataExpectedException {
+    SearchResponse response = client.prepareSearch(indexConfiguration.getIndex())
+            .setTypes("path")
+            .setSearchType(SearchType.SCAN)
+            .setScroll(TimeValue.timeValueMinutes(1))
+            .setSize(1000)
+            .setQuery(QueryBuilders.regexpQuery("path", regEx))
+            .execute()
+            .actionGet();
+
+    response = searchScroll(response);
+
+    // if total hits exceeds maximum - abort right away returning empty array
+    if (response.getHits().totalHits() > indexConfiguration.getMaxPaths()) {
+      logger.debug("Total number of paths exceeds the limit: " + response.getHits().totalHits());
+      throw new TooMuchDataExpectedException(
+              "Total number of paths exceeds the limit: "
+                      + response.getHits().totalHits()
+                      + " (the limit is "
+                      + indexConfiguration.getMaxPaths()
+                      + ")");
+    }
+    return response;
   }
 
   private SearchResponse searchScroll(SearchResponse response) {

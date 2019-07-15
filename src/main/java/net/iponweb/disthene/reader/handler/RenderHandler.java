@@ -17,6 +17,7 @@ import net.iponweb.disthene.reader.graphite.grammar.GraphiteLexer;
 import net.iponweb.disthene.reader.graphite.grammar.GraphiteParser;
 import net.iponweb.disthene.reader.graphite.utils.ValueFormatter;
 import net.iponweb.disthene.reader.handler.parameters.RenderParameters;
+import net.iponweb.disthene.reader.service.index.IndexService;
 import net.iponweb.disthene.reader.service.metric.MetricService;
 import net.iponweb.disthene.reader.service.stats.StatsService;
 import net.iponweb.disthene.reader.service.throttling.ThrottlingService;
@@ -46,8 +47,8 @@ public class RenderHandler implements DistheneReaderHandler {
     private TimeLimiter timeLimiter = new SimpleTimeLimiter(executor);
 
 
-    public RenderHandler(MetricService metricService, StatsService statsService, ThrottlingService throttlingService, ReaderConfiguration readerConfiguration) {
-        this.evaluator = new TargetEvaluator(metricService);
+    public RenderHandler(MetricService metricService, IndexService indexService, StatsService statsService, ThrottlingService throttlingService, ReaderConfiguration readerConfiguration) {
+        this.evaluator = new TargetEvaluator(metricService, indexService);
         this.statsService = statsService;
         this.throttlingService = throttlingService;
         this.readerConfiguration = readerConfiguration;
