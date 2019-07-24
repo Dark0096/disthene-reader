@@ -256,8 +256,9 @@ public class MetricService {
             Double values[] = new Double[length];
             for (Row row : resultSet) {
                 allNulls = false;
-                values[timestampIndices.get(row.getLong("time"))] =
-                        isSumMetric(path) ? CollectionUtils.unsafeSum(row.getList("data", Double.class)) : CollectionUtils.unsafeAverage(row.getList("data", Double.class));
+                values[timestampIndices.get(row.getLong("time"))] = isSumMetric(path) ? CollectionUtils.unsafeSum(row.getList("data", Double.class)) :  CollectionUtils.last(row.getList("data", Double.class));
+                // TODO Below is the origin logic but I choose the last value by dark
+                // isSumMetric(path) ? CollectionUtils.unsafeSum(row.getList("data", Double.class)) : CollectionUtils.unsafeAverage(row.getList("data", Double.class));
             }
 
             json = new Gson().toJson(values);
@@ -268,8 +269,9 @@ public class MetricService {
                 allNulls = false;
                 values = new Double[length];
                 for (Row row : resultSet) {
-                    values[timestampIndices.get(row.getLong("time"))] =
-                            isSumMetric(path) ? CollectionUtils.unsafeSum(row.getList("data", Double.class)) : CollectionUtils.unsafeAverage(row.getList("data", Double.class));
+                    values[timestampIndices.get(row.getLong("time"))] = isSumMetric(path) ? CollectionUtils.unsafeSum(row.getList("data", Double.class)) :  CollectionUtils.last(row.getList("data", Double.class));
+                    // TODO Below is the origin logic but I choose the last value by dark
+                    // isSumMetric(path) ? CollectionUtils.unsafeSum(row.getList("data", Double.class)) : CollectionUtils.unsafeAverage(row.getList("data", Double.class));
                 }
             } else {
                 values = new Double[length];
