@@ -48,8 +48,7 @@ public class MetricService {
     }
 
     public String getMetricsAsJson(String tenant, List<String> wildcards, long from, long to) throws ExecutionException, InterruptedException, TooMuchDataExpectedException {
-        List<String> paths = indexService.getPaths(tenant, wildcards);
-        Collections.sort(paths);
+        Set<String> paths = indexService.getPaths(tenant, wildcards);
 
         // Calculate rollup etc
         Long now = System.currentTimeMillis() * 1000;
@@ -115,7 +114,7 @@ public class MetricService {
     }
 
     public List<TimeSeries> getMetricsAsList(String tenant, List<String> wildcards, long from, long to) throws ExecutionException, InterruptedException, TooMuchDataExpectedException {
-        List<String> paths = indexService.getPaths(tenant, wildcards);
+        Set<String> paths = indexService.getPaths(tenant, wildcards);
 
         statsService.incRenderPathsRead(tenant, paths.size());
 

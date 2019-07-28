@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /** @author Andrei Ivanov */
@@ -39,14 +40,14 @@ public class TargetEvaluator {
 
   public List<TimeSeries> visit(PathTarget pathTarget) throws EvaluationException {
     try {
-      List<String> paths =
+      Set<String> paths =
           indexService.getPaths(pathTarget.getTenant(), Lists.newArrayList(pathTarget.getPath()));
 
       logger.debug("resolved paths : " + paths);
 
       return metricService.getMetricsAsList(
           pathTarget.getTenant(),
-          paths,
+          Lists.newArrayList(paths),
           pathTarget.getFrom(),
           pathTarget.getTo());
     } catch (ExecutionException | InterruptedException | TooMuchDataExpectedException e) {

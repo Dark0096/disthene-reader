@@ -43,10 +43,10 @@ public class IndexService {
     }
   }
 
-  public List<String> getPaths(String tenant, List<String> wildcards)
+  public Set<String> getPaths(String tenant, List<String> wildcards)
       throws TooMuchDataExpectedException {
     List<String> regExs = new ArrayList<>();
-    List<String> result = new ArrayList<>();
+    Set<String> result = new HashSet<>();
 
     for (String wildcard : wildcards) {
       if (WildcardUtil.isPlainPath(wildcard)) {
