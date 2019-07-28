@@ -1,7 +1,9 @@
 package net.iponweb.disthene.reader.handler.response;
 
 import com.google.common.base.Preconditions;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(of = "id")
 public class HierarchyMetricPath {
     private int allowChildren;
     private int expandable;
