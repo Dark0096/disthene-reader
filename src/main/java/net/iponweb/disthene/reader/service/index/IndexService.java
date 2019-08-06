@@ -31,9 +31,13 @@ public class IndexService {
   public IndexService(IndexConfiguration indexConfiguration) {
     this.indexConfiguration = indexConfiguration;
 
+    // https://www.elastic.co/guide/en/elasticsearch/client/java-api/2.0/transport-client.html
     Settings settings =
         ImmutableSettings.settingsBuilder()
             .put("cluster.name", indexConfiguration.getName())
+            .put("client.transport.sniff", true)
+            .put("client.transport.ping_timeout", "5s")
+            .put("client.transport.nodes_sampler_interval", "5s")
             .build();
     client = new TransportClient(settings);
 
