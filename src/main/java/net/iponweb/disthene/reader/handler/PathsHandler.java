@@ -8,6 +8,7 @@ import net.iponweb.disthene.reader.exceptions.ParameterParsingException;
 import net.iponweb.disthene.reader.exceptions.TooMuchDataExpectedException;
 import net.iponweb.disthene.reader.exceptions.UnsupportedMethodException;
 import net.iponweb.disthene.reader.service.index.IndexService;
+import net.iponweb.disthene.reader.service.stats.GraphiteStatsService;
 import net.iponweb.disthene.reader.service.stats.StatsService;
 import org.apache.log4j.Logger;
 

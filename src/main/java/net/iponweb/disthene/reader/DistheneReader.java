@@ -7,6 +7,8 @@ import net.iponweb.disthene.reader.server.ReaderServer;
 import net.iponweb.disthene.reader.service.index.IndexService;
 import net.iponweb.disthene.reader.service.metric.MetricService;
 import net.iponweb.disthene.reader.service.stats.StatsService;
+import net.iponweb.disthene.reader.service.stats.NoopStatsService;
+import net.iponweb.disthene.reader.service.stats.GraphiteStatsService;
 import net.iponweb.disthene.reader.service.store.CassandraService;
 import net.iponweb.disthene.reader.service.throttling.ThrottlingService;
 import org.apache.commons.cli.*;
@@ -77,8 +79,9 @@ public class DistheneReader {
             logger.info("Creating throttling");
             throttlingService = new ThrottlingService(throttlingConfiguration);
 
-            logger.info("Creating stats");
-            statsService = new StatsService(distheneReaderConfiguration.getStats());
+            logger.info("Creating statsService");
+            statsService = createStatsService(distheneReaderConfiguration);
+            logger.info("Created statsService : " + statsService.getClass().getSimpleName());
 
             logger.info("Creating reader");
             readerServer = new ReaderServer(distheneReaderConfiguration.getReader());
@@ -129,6 +132,12 @@ public class DistheneReader {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private StatsService createStatsService(DistheneReaderConfiguration distheneReaderConfiguration) {
+        return distheneReaderConfiguration.getStats().isEnabled()
+                ? new GraphiteStatsService(distheneReaderConfiguration.getStats())
+                : new NoopStatsService();
     }
 
     public static void main(String[] args) {

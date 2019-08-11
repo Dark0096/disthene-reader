@@ -7,12 +7,12 @@ import java.net.UnknownHostException;
  * @author Andrei Ivanov
  */
 public class StatsConfiguration {
+    private boolean enabled;
     private int interval;
     private String tenant;
     private String hostname;
     private String carbonHost;
     private int carbonPort;
-
 
     public StatsConfiguration() {
         try {
@@ -62,6 +62,14 @@ public class StatsConfiguration {
         this.carbonPort = carbonPort;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     @Override
     public String toString() {
         return "StatsConfiguration{" +
@@ -70,6 +78,7 @@ public class StatsConfiguration {
                 ", hostname='" + hostname + '\'' +
                 ", carbonHost='" + carbonHost + '\'' +
                 ", carbonPort=" + carbonPort +
+                ", enabled=" + enabled +
                 '}';
     }
 }

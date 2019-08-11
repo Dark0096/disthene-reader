@@ -50,4 +50,8 @@ public class DistheneReaderConfiguration {
                 ", stats=" + stats +
                 '}';
     }
+
+    public boolean isStatsEnabled() {
+        return false;
+    }
 }
