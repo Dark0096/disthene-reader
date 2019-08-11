@@ -104,3 +104,6 @@ fabric.properties
 language-packs/ruby/**/ruby
 *.log
 /*.iml
+
+### Docker data file ###
+/data/

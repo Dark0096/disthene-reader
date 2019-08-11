@@ -6,11 +6,10 @@ reader:
     - 900s:62208000s
 store:
   cluster:
-    - "cassandra-1"
-    - "cassandra-2"
+    - "127.0.0.1"
   port: 9042
-  userName: 'username'
-  userPassword: 'password'
+  userName: 'cassandra'
+  userPassword: 'cassandra'
   keyspace: 'metric'
   columnFamily: 'metric'
   maxConnections: 2048
@@ -20,19 +19,14 @@ store:
   loadBalancingPolicyName: 'TokenDcAwareRoundRobinPolicy'
   protocolVersion: "V2"
 index:
-  name: "disthene"
+  name: "metric"
   cluster:
-    - "es-1"
-    - "es-1"
+    - "127.0.0.1"
   port: 9300
-  index: "disthene_paths"
+  index: "metric"
   type: "path"
   scroll: 50000
   timeout: 120000
   maxPaths: 50000
 stats:
-  interval: 60
-  tenant: "graphite"
-  hostname: "disthene-1a"
-  carbonHost: "carbon.example.net"
-  carbonPort: 2003
+  enabled: false

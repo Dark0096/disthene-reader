@@ -1,0 +1,4 @@
+cluster.name: metric
+path:
+  data: /data
+  logs: /logs

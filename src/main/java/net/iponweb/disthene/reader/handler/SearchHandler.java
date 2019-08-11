@@ -1,7 +1,6 @@
 package net.iponweb.disthene.reader.handler;
 
 import com.google.common.base.Joiner;
-import com.google.gson.Gson;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.*;
 import net.iponweb.disthene.reader.exceptions.MissingParameterException;
@@ -10,8 +9,6 @@ import net.iponweb.disthene.reader.exceptions.UnsupportedMethodException;
 import net.iponweb.disthene.reader.service.index.IndexService;
 import net.iponweb.disthene.reader.service.stats.StatsService;
 import org.apache.log4j.Logger;
-
-import java.nio.charset.Charset;
 
 /**
  * @author Andrei Ivanov

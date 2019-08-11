@@ -19,6 +19,7 @@ import net.iponweb.disthene.reader.graphite.utils.ValueFormatter;
 import net.iponweb.disthene.reader.handler.parameters.RenderParameters;
 import net.iponweb.disthene.reader.service.index.IndexService;
 import net.iponweb.disthene.reader.service.metric.MetricService;
+import net.iponweb.disthene.reader.service.stats.GraphiteStatsService;
 import net.iponweb.disthene.reader.service.stats.StatsService;
 import net.iponweb.disthene.reader.service.throttling.ThrottlingService;
 import org.antlr.v4.runtime.ANTLRInputStream;

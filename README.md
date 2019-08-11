@@ -45,81 +45,46 @@ The following functions are not implemented:
 * randomWalkFunction
 * events
 
-
-
-
 ## Compiling 
 
-This is a standard Java Maven project. 
+This is a standard Java Gradle project. 
 
 ```
-mvn package
+gradle jar
 ```
 
 will most probably do the trick.
 
 ## Running
-There are a couple of things you will need in runtime, just the same set as for **cyanite** and/or **disthene**
+There are a couple of things you will need in runtime
 
-* Cassandra
-* Elasticsearch
-* Graphite-web (probably a modified version like https://github.com/cybem/graphite-web-iow)
-* [graphite-cyanite](https://github.com/brutasse/graphite-cyanite)
+* Cassandra 2.x
+* Elasticsearch 2.x
+* Grafana using graphite as the datasource
 
 ## Configuration
 There several configuration files involved
 * /etc/disthene-reader/disthene-reader.yaml (location can be changed with -c command line option if needed)
-* /etc/disthene-reader/disthene-reader-log4j.xml (location can be changed with -l command line option if needed) 
+* /etc/disthene-reader/disthene-reader-log4j.xml (location can be changed with -l command line option if needed)
 
-##### Main configuration in disthene.yaml
+## Quick start for development
+
+You can run the disthene-reader app by using the default setup value as shown below.
+
 ```
-reader:
-# bind address and port
-  bind: "0.0.0.0"
-  port: 8080
-# rollups - currently only "s" units supported  
-  rollups:
-    - 60s:5356800s
-    - 900s:62208000s
-store:
-# C* contact points, port, keyspace and table
-  cluster:
-    - "cassandra-1"
-    - "cassandra-2"
-  port: 9042
-  keyspace: 'metric'
-  columnFamily: 'metric'
-# maximum connections per host , timeouts in seconds, max requests per host - these are literally used in C* java driver settings
-  maxConnections: 2048
-  readTimeout: 10
-  connectTimeout: 10
-  maxRequests: 128
-index:
-# ES cluster name, contact points, native port, index name & type
-  name: "disthene"
-  cluster:
-    - "es-1"
-    - "es-2"
-  port: 9300
-  index: "disthene"
-  type: "path"
-# Maxim number paths allowed per one wildcard. This is just to prevent abuse
-  maxPaths: 50000
-stats:
-# flush self metrics every 'interval' seconds
-  interval: 60
-# tenant to use for stats
-  tenant: "graphite"
-# hostname to use
-  hostname: "disthene-reader"
-# carbon server to send stats to
-  carbonHost: "carbon.example.net"
-# carbon port to send stats to
-  carbonPort: 2003  
+$ export DISTHENE_HOME=$DISTHENE_INSTALLED_DIR
+$ cd $DISTHENE_HOME
+$ docker-compose up -d
+$ docker exec -it cassandra cqlsh
+# create the keyspace and table using $DISTHENE_HOME/infra/cassandra/2.x/metric.cql
+$ -c $DISTHENE_HOME/config/disthene-reader-sample.yaml -l $DISTHENE_HOME/config/disthene-reader-log4j-sample.xml -t $DISTHENE_HOME/config/throttling-sample.yaml   
 ```
 
-##### Logging configuration in disthene-reader-log4j.xml
-Configuration is straight forward as per log4j
+## Commit convention
+This project uses the git conventional commit rule provided by [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/)
+
+## Configuration
+Please check [this document](/docs/CONFIGURATION.md) for the disthene-reader configuration                                                                
 
 ## License
 
