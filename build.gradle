@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'antlr'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = 'http://repo.maven.apache.org/maven2'
+    }
+}
+
+dependencies {
+    compile 'log4j:log4j:1.2.17'
+    compile 'io.netty:netty-all:4.0.24.Final'
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'org.yaml:snakeyaml:1.15'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.datastax.cassandra:cassandra-driver-core:3.1.0'
+    compile 'com.google.guava:guava:18.0'
+    compile 'joda-time:joda-time:2.8.2'
+    compile 'org.elasticsearch:elasticsearch:1.7.6'
+    compile 'net.jpountz.lz4:lz4:1.2.0'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'com.rubiconproject.oss:jchronic:0.2.6'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}
+
+group = 'net.iponweb.disthene.reader'
+version = '0.2.51'
+description = 'disthene-reader'
+sourceCompatibility = '1.7'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+dependencies {
+    // https://github.com/antlr/intellij-plugin-v4/issues/316
+    antlr "org.antlr:antlr4:4.0"
+}
+
+generateGrammarSource {
+    outputDirectory = file("src/generated/java-antlr/net/iponweb/disthene/reader/graphite/grammar")
+    arguments << "-package" << "net.iponweb.disthene.reader.graphite.grammar"
+    arguments << "-visitor"
+}
+
+compileJava.dependsOn generateGrammarSource
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated/java-antlr"]
+        }
+    }
+}
