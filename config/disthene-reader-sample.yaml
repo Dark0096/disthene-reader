@@ -19,18 +19,14 @@ store:
   loadBalancingPolicyName: 'TokenDcAwareRoundRobinPolicy'
   protocolVersion: "V2"
 index:
-  name: "disthene"
+  name: "metric"
   cluster:
     - "127.0.0.1"
   port: 9300
-  index: "disthene_paths"
+  index: "metric"
   type: "path"
   scroll: 50000
   timeout: 120000
   maxPaths: 50000
 stats:
-  interval: 60
-  tenant: "graphite"
-  hostname: "disthene-1a"
-  carbonHost: "carbon.example.net"
-  carbonPort: 2003
+  enabled: false
