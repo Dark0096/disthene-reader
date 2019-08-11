@@ -6,11 +6,10 @@ reader:
     - 900s:62208000s
 store:
   cluster:
-    - "cassandra-1"
-    - "cassandra-2"
+    - "127.0.0.1"
   port: 9042
-  userName: 'username'
-  userPassword: 'password'
+  userName: 'cassandra'
+  userPassword: 'cassandra'
   keyspace: 'metric'
   columnFamily: 'metric'
   maxConnections: 2048
@@ -22,8 +21,7 @@ store:
 index:
   name: "disthene"
   cluster:
-    - "es-1"
-    - "es-1"
+    - "127.0.0.1"
   port: 9300
   index: "disthene_paths"
   type: "path"
