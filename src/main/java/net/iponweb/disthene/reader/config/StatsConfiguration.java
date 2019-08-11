@@ -7,7 +7,9 @@ import java.net.UnknownHostException;
  * @author Andrei Ivanov
  */
 public class StatsConfiguration {
-    private boolean enabled;
+    private static final boolean DEFAULT_ENABLED = false;
+
+    private boolean enabled = DEFAULT_ENABLED;
     private int interval;
     private String tenant;
     private String hostname;

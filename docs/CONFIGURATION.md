@@ -33,7 +33,7 @@ index:
 # Maxim number paths allowed per one wildcard. This is just to prevent abuse
   maxPaths: 50000
 stats:
-  enable: true
+  enabled: true
 # flush self metrics every 'interval' seconds
   interval: 60
 # tenant to use for stats
