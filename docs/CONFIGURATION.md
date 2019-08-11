@@ -1,4 +1,4 @@
-##### Main configuration in disthene.yaml
+##### disthene-reader.yaml
 ```
 reader:
 # bind address and port
@@ -33,6 +33,7 @@ index:
 # Maxim number paths allowed per one wildcard. This is just to prevent abuse
   maxPaths: 50000
 stats:
+  enable: true
 # flush self metrics every 'interval' seconds
   interval: 60
 # tenant to use for stats
@@ -43,6 +44,23 @@ stats:
   carbonHost: "carbon.example.net"
 # carbon port to send stats to
   carbonPort: 2003  
+```
+
+##### throttling.yaml
+```
+# enable throttling
+throttlingEnabled: true
+# total qps limit - i.e. number of allowed requests per second
+totalQPS: 30
+#default tenant qps limit
+defaultQPS: 5
+# qps per tenant
+tenants:
+  "my_favorite_tenant" : 25
+#exceptions
+exceptions:
+  - "testtenant"
+  - "graphite_cluster"
 ```
 
 ##### Logging configuration in disthene-reader-log4j.xml

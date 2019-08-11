@@ -12,7 +12,9 @@ services:
       CASSANDRA_CLUSTER_NAME: metric
     container_name: cassandra
   elasticsearch:
-    image: elasticsearch:2.4
+    image: barnybug/elasticsearch:1.7.2
+    volumes:
+      - ./infra/elasticsearch/1.7/elasticsearch.yml:/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
       - 9300:9300

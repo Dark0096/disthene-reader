@@ -75,6 +75,8 @@ You can run the disthene-reader app by using the default setup value as shown be
 $ export DISTHENE_HOME=$DISTHENE_INSTALLED_DIR
 $ cd $DISTHENE_HOME
 $ docker-compose up -d
+$ docker exec -it cassandra cqlsh
+# create the keyspace and table using $DISTHENE_HOME/infra/cassandra/2.x/metric.cql
 $ -c $DISTHENE_HOME/config/disthene-reader-sample.yaml -l $DISTHENE_HOME/config/disthene-reader-log4j-sample.xml -t $DISTHENE_HOME/config/throttling-sample.yaml   
 ```
 
