@@ -6,6 +6,17 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'net.iponweb.disthene.reader.DistheneReader'
+    }
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
 dependencies {
     implementation project(':graphene-common')
     implementation project(':graphene-function')
