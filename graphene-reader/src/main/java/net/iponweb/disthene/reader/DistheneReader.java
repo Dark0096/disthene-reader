@@ -122,8 +122,9 @@ public class DistheneReader {
             PathStatsHandler pathStatsHandler = new PathStatsHandler(elasticsearchIndexService, statsService);
             readerServer.registerHandler(PATHS_STATS_PATH, pathStatsHandler);
 
-            logger.info("Starting reader");
+            logger.info("Starting Graphene Reader");
             readerServer.run();
+            logger.info("Started Graphene Reader");
 
             Signal.handle(new Signal("TERM"), new SigtermSignalHandler());
             Signal.handle(new Signal("HUP"), new SighupSignalHandler());
