@@ -45,6 +45,10 @@ The following functions are not implemented:
 * randomWalkFunction
 * events
 
+## Support Function
+Please check [this document](/docs/FUNCTION.md) for the disthene-reader
+configuration
+
 ## Compiling 
 
 This is a standard Java Gradle project. 
