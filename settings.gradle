@@ -1,4 +1,4 @@
-rootProject.name = 'disthene-reader'
+rootProject.name = 'graphene'
 
 include 'graphene-common'
 include 'graphene-function'
