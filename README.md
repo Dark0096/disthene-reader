@@ -1,4 +1,4 @@
-disthene-reader: cassandra backed metric storage *reader*
+graphene-reader: cassandra backed metric storage *reader*
 =========================================================
 
 ## Motivation
