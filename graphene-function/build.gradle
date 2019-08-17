@@ -38,7 +38,7 @@ dependencies {
 }
 
 generateGrammarSource {
-    outputDirectory = file("src/generated/java-antlr/net/iponweb/disthene/reader/graphite/grammar")
+    outputDirectory = file("src/main/java/net/iponweb/disthene/reader/graphite/grammar")
     arguments << "-package" << "net.iponweb.disthene.reader.graphite.grammar"
     arguments << "-visitor"
 }
