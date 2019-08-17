@@ -6,9 +6,6 @@ repositories {
     mavenCentral()
 }
 
-group = 'net.iponweb.disthene.reader'
-version = '1.0.9'
-description = 'disthene-reader'
 sourceCompatibility = '1.8'
 
 dependencies {
