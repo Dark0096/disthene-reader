@@ -1,1 +1,5 @@
 rootProject.name = 'disthene-reader'
+
+include 'graphene-common'
+include 'graphene-function'
+include 'graphene-reader'

@@ -2,20 +2,14 @@ plugins {
     id 'java'
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'net.iponweb.disthene.reader.DistheneReader'
-    }
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-}
-
 repositories {
     mavenCentral()
 }
+
+group = 'net.iponweb.disthene.reader'
+version = '1.0.9'
+description = 'disthene-reader'
+sourceCompatibility = '1.8'
 
 dependencies {
     compile 'log4j:log4j:1.2.17'
@@ -34,8 +28,3 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
-
-group = 'net.iponweb.disthene.reader'
-version = '1.0.9'
-description = 'disthene-reader'
-sourceCompatibility = '1.8'
