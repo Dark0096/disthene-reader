@@ -76,19 +76,27 @@ There several configuration files involved
 You can run the disthene-reader app by using the default setup value as shown below.
 
 ```
-$ export DISTHENE_HOME=$DISTHENE_INSTALLED_DIR
-$ cd $DISTHENE_HOME
+$ export GRAPHENE_HOME=$GRAPHENE_INSTALLED_DIR
+$ cd $GRAPHENE_HOME
 $ docker-compose up -d
 $ docker exec -it cassandra cqlsh
-# create the keyspace and table using $DISTHENE_HOME/infra/cassandra/2.x/metric.cql
-$ -c $DISTHENE_HOME/config/disthene-reader-sample.yaml -l $DISTHENE_HOME/config/disthene-reader-log4j-sample.xml -t $DISTHENE_HOME/config/throttling-sample.yaml   
+# create the keyspace and table using $GRAPHENE_HOME/infra/cassandra/2.x/metric.cql
+$ -c $GRAPHENE_HOME/graphene-reader/graphene-reader-sample.yaml -l $GRAPHENE_HOME/config/graphene-reader-log4j-sample.xml -t $GRAPHENE_HOME/config/throttling-sample.yaml   
 ```
 
 ## Commit convention
 This project uses the git conventional commit rule provided by [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/)
 
 ## Configuration
-Please check [this document](/docs/CONFIGURATION.md) for the disthene-reader configuration                                                                
+Please check [this document](/docs/CONFIGURATION.md) for the graphene-reader configuration
+
+## Thanks
+
+Thanks, this project is useless without their work on **cyanite**, **graphite-api**, **graphite-cyanite**, **disthene-reader**, **disthene**
+
+- Pierre-Yves Ritschard [https://github.com/pyr](https://github.com/pyr) 
+- Bruno Renié ([https://github.com/brutasse](https://github.com/brutasse))
+- EinsamHauer https://github.com/EinsamHauer/disthene-reader
 
 ## License
 

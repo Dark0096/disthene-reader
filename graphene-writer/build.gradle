@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = 'http://repo.maven.apache.org/maven2'
+    }
+}
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'log4j:log4j:1.2.17'
+    compile 'commons-logging:commons-logging:1.2'
+    compile 'io.netty:netty-all:4.1.11.Final'
+    compile 'joda-time:joda-time:2.8'
+    compile 'org.yaml:snakeyaml:1.15'
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.elasticsearch:elasticsearch:1.3.4'
+    compile 'com.datastax.cassandra:cassandra-driver-core:3.1.0'
+    compile 'net.jpountz.lz4:lz4:1.2.0'
+    compile 'org.slf4j:slf4j-log4j12:1.7.12'
+    compile 'org.xerial.snappy:snappy-java:1.1.1.3'
+    compile 'net.engio:mbassador:1.2.1'
+    testCompile 'junit:junit:3.8.1'
+}
+
+group = 'net.iponweb.disthene'
+version = '0.1.13'
+description = 'disthene'
+sourceCompatibility = '1.8'
