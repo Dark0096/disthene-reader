@@ -6,6 +6,8 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = '1.8'
+
 dependencies {
     compile 'log4j:log4j:1.2.17'
     compile 'io.netty:netty-all:4.0.24.Final'
@@ -23,5 +25,3 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
-
-sourceCompatibility = '1.8'
