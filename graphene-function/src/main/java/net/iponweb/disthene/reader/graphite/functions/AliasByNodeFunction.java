@@ -11,9 +11,11 @@ import net.iponweb.disthene.reader.utils.TimeSeriesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Andrei Ivanov
+ * @author jerome89
  */
 public class AliasByNodeFunction extends DistheneFunction {
 
@@ -23,41 +25,64 @@ public class AliasByNodeFunction extends DistheneFunction {
 
     @Override
     public List<TimeSeries> evaluate(TargetEvaluator evaluator) throws EvaluationException {
-        List<TimeSeries> processedArguments = new ArrayList<>();
-        processedArguments.addAll(evaluator.eval((Target) arguments.get(0)));
+        List<TimeSeries> processedArguments = new ArrayList<>(evaluator.eval((Target) arguments.get(0)));
 
         if (processedArguments.size() == 0) return new ArrayList<>();
 
-        if (!TimeSeriesUtils.checkAlignment(processedArguments)) {
-            throw new TimeSeriesNotAlignedException();
-        }
+        int[] nodes = getNodes(arguments, computeMinimumLength(processedArguments));
 
+        return setNamesByNodes(processedArguments, nodes);
+    }
+
+    private int computeMinimumLength(List<TimeSeries> timeSeriesList) {
+        int minLength = Integer.MAX_VALUE;
+        for (TimeSeries ts : timeSeriesList) {
+            int length = TimeSeriesUtils.getSeriesNameLength(ts);
+            if (length < minLength) {
+                minLength = length;
+            }
+        }
+        return minLength;
+    }
+
+    private int[] getNodes(List<Object> arguments, int minLength) {
         int[] nodes = new int[arguments.size() - 1];
         for (int i = 1; i < arguments.size(); i++) {
-            nodes[i - 1] = ((Double) arguments.get(i)).intValue();
+            int node = ((Double) arguments.get(i)).intValue();
+            if (node < 0) {
+                nodes[i - 1] = node + minLength;
+            } else {
+                nodes[i - 1] = node;
+            }
         }
+        return nodes;
+    }
 
-        for (TimeSeries ts : processedArguments) {
-            String[] split = ts.getName().split("\\.");
+    private List<TimeSeries> setNamesByNodes(List<TimeSeries> timeSeriesList, int[] nodes) {
+        for (TimeSeries ts : timeSeriesList) {
+            String[] split = TimeSeriesUtils.DOT_PATTERN.split(ts.getName());
             List<String> parts = new ArrayList<String>();
             for (int node : nodes) {
-                if (node >= 0 && node < split.length) {
-                    parts.add(split[node]);
-                }
+                parts.add(split[node]);
             }
             ts.setName(Joiner.on(".").join(parts));
         }
-
-        return processedArguments;
+        return timeSeriesList;
     }
 
     @Override
     public void checkArguments() throws InvalidArgumentException {
-        if (arguments.size() < 2) throw new InvalidArgumentException("aliasByNode: number of arguments is " + arguments.size() + ". Must be at least two.");
-        if (!(arguments.get(0) instanceof Target)) throw new InvalidArgumentException("aliasByNode: argument is " + arguments.get(0).getClass().getName() + ". Must be series");
+        checkIfNot(arguments.size() >= 2,
+                "aliasByNode: number of arguments is {}. Must be at least two.", arguments.size());
+
+        Optional<Object> argSeries = Optional.ofNullable(arguments.get(0));
+        checkIfNot(argSeries.orElse(null) instanceof Target,
+                "aliasByNode: First argument is {}. Must be series.", argSeries.orElse("null"));
+
         for (int i = 1; i < arguments.size(); i++) {
-            if (!(arguments.get(i) instanceof Double))
-                throw new InvalidArgumentException("groupByNodes: argument " + i + " is " + arguments.get(i).getClass().getName() + ". Must be a number");
+            Optional<Object> argNumber = Optional.ofNullable(arguments.get(i));
+            checkIfNot(argNumber.orElse(null) instanceof Double,
+                    "aliasByNode: argument is {}. Must be a number.", argNumber.orElse("null"));
         }
     }
 }

@@ -106,4 +106,10 @@ public abstract class DistheneFunction extends Target {
 
         return null;
     }
+
+    public void checkIfNot(boolean condition, String format, Object object) throws InvalidArgumentException {
+        if (! condition) {
+            throw new InvalidArgumentException(String.format(format, object));
+        }
+    }
 }
